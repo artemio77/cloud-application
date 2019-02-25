@@ -1,0 +1,26 @@
+spring:
+  security:
+    oauth2:
+      client:
+        clientId: user-management-service
+        clientSecret: artem
+        accessTokenUri: http://localhost:5000/auth-service/oauth/token
+        grant-type: client_credentials
+        scope: server
+      resource:
+        id: user-management-service
+        tokenInfoUri: http://localhost:5000/auth-service/oauth/check_token
+
+
+logging:
+  level:
+    org:
+      springframework: info
+server:
+  servlet:
+    context-path: /user-management-service
+  port: 5050
+
+feign:
+  hystrix:
+    enabled: true

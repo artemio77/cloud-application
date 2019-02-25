@@ -4,13 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gmail.derevets.artem.authservice.exception.UserNotFoundException;
 import com.gmail.derevets.artem.authservice.model.User;
+import com.gmail.derevets.artem.authservice.model.enums.Role;
 import com.gmail.derevets.artem.authservice.repository.UserRepository;
 import com.gmail.derevets.artem.authservice.service.UserService;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +29,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    @HystrixCommand(fallbackMethod = "registerNewAccountAndGetData_Fallback")
+    @Override
     public void registerNewAccount(final User user) {
-        User newUser = User.getBuilder()
+        User newUser = User.builder()
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
@@ -41,9 +40,10 @@ public class UserServiceImpl implements UserService {
                 .isAccountNonLocked(true)
                 .isCredentialsNonLocked(true)
                 .isEnabled(false)
+                .role(Role.ROLE_USER)
                 .build();
         newUser.setVerificationCode(generateUniqueVerificationCode());
-        userRepository.save(user);
+        userRepository.save(newUser);
 
     }
 

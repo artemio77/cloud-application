@@ -1,3 +1,15 @@
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 20000
+
+ribbon:
+  ReadTimeout: 20000
+  ConnectTimeout: 20000
+
 zuul:
   ignoredServices: '*'
   host:
@@ -5,14 +17,16 @@ zuul:
     socket-timeout-millis: 20000
   routes:
     auth-service:
-      path: /auth-server/**
+      path: /auth-service/**
       url: http://localhost:5000
       stripPrefix: false
       sensitiveHeaders:
 
-ribbon:
-  ReadTimeout: 20000
-  ConnectTimeout: 20000
+    user-management-service:
+      path: /user-management-service/**
+      url: http://localhost:5050
+      stripPrefix: false
+      sensetiveHeaders:
 
 server:
   port: 4000

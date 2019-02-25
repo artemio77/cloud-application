@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.3.RELEASE</version>
+        <version>LATEST</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -21,7 +21,6 @@
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
         <java.version>1.8</java.version>
     </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -31,6 +30,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>com.fasterxml.uuid</groupId>
+                <artifactId>java-uuid-generator</artifactId>
+                <version>3.1.5</version>
+                <scope>compile</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -39,9 +44,10 @@
         <module>gateway-service</module>
         <module>authentication-service</module>
         <module>eureka-service</module>
-           <module>monitoring-service</module>
-        <!--   <module>account-service</module>
-           <module>statistics-service</module>
+        <module>monitoring-service</module>
+        <module>turbine-stream-service</module>
+        <module>user-management-service</module>
+        <!--   <module>statistics-service</module>
            <module>notification-service</module>
            <module>turbine-stream-service</module>-->
     </modules>

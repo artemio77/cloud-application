@@ -109,7 +109,11 @@ VALUES ('spring-security-oauth2-read-write-client', 'resource-server-rest-api',
         '$2a$10$ZVIh8SIneg7K52EDwUKKfeybFHvjqNQEoQ7Z/eNlMwGdpJy4bLBYK', 'read,write',
         'password,authorization_code,refresh_token', '', 'ROLE_USER', 12500, 36000, null, null);
 
-
-
+INSERT INTO public.oauth_client_details (client_id, resource_ids, client_secret, scope, authorized_grant_types,
+                                         web_server_redirect_uri, authorities, access_token_validity,
+                                         refresh_token_validity, additional_information, autoapprove)
+VALUES ('user-management-service', 'user-management-service',
+        '$2a$10$ZVIh8SIneg7K52EDwUKKfeybFHvjqNQEoQ7Z/eNlMwGdpJy4bLBYK', 'server',
+        'client_credentials,refresh_token', '', '', null, null, null, null);
 
 

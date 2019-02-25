@@ -39,11 +39,12 @@ public class UserController {
     }
 
     @PutMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
+    public @ResponseBody
+    User registerUser(@RequestBody User user) {
         log.info(user.toString());
         userService.registerNewAccount(user);
         log.info("user {}", user);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new user;
     }
 
     @GetMapping(path = "/{code}")

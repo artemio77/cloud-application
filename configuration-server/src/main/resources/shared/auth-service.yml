@@ -1,6 +1,10 @@
+logging:
+  level:
+    org:
+      springframework: info
 server:
   servlet:
-    context-path: /auth-server
+    context-path: /auth-service
   port: 5000
 spring:
   main:
@@ -36,4 +40,20 @@ spring:
     username: guest
     password: guest
     virtual-host:
+feign:
+  hystrix:
+    enabled: true
+
+management:
+  endpoint:
+    info:
+      enabled: true
+    mappings:
+      enabled: true
+    metrics:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
 
