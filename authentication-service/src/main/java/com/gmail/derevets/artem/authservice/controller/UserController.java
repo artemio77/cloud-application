@@ -4,7 +4,6 @@ package com.gmail.derevets.artem.authservice.controller;
 import com.gmail.derevets.artem.authservice.model.User;
 import com.gmail.derevets.artem.authservice.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,14 +27,14 @@ public class UserController {
 
     private final TokenStore tokenStore;
 
-    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public UserController(UserServiceImpl userService, PasswordEncoder passwordEncoder, TokenStore tokenStore, RabbitTemplate rabbitTemplate) {
+    public UserController(UserServiceImpl userService,
+                          PasswordEncoder passwordEncoder,
+                          TokenStore tokenStore) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.tokenStore = tokenStore;
-        this.rabbitTemplate = rabbitTemplate;
     }
 
     @PutMapping("/register")
@@ -44,14 +43,14 @@ public class UserController {
         log.info(user.toString());
         userService.registerNewAccount(user);
         log.info("user {}", user);
-        return new user;
+        return user;
     }
 
-    @GetMapping(path = "/{code}")
-    public ResponseEntity<Long> checkCodeByEmail(@PathVariable("code") Long code) {
+    @PostMapping(path = "/activate/{code}")
+    public @ResponseBody
+    User activateUser(@PathVariable("code") Long code) {
         log.info(code.toString());
-        User user = userService.activateUser(code);
-        return new ResponseEntity<>(user.getVerificationCode(), HttpStatus.OK);
+        return userService.activateUser(code);
     }
 
     @GetMapping("/exist/{email:.+}")

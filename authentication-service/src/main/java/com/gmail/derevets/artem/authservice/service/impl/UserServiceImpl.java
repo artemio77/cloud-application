@@ -1,19 +1,16 @@
 package com.gmail.derevets.artem.authservice.service.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gmail.derevets.artem.authservice.exception.UserNotFoundException;
 import com.gmail.derevets.artem.authservice.model.User;
 import com.gmail.derevets.artem.authservice.model.enums.Role;
 import com.gmail.derevets.artem.authservice.repository.UserRepository;
 import com.gmail.derevets.artem.authservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -26,10 +23,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
-
     @Override
+    @Transactional
     public void registerNewAccount(final User user) {
         User newUser = User.builder()
                 .email(user.getEmail())
@@ -56,20 +51,15 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Transactional
     public User activateUser(Long code) {
-        Optional<User> userOptional = userRepository.findByEmail(userRepository.checkUniqueVerificationCode(code));
-        userOptional.ifPresent(it -> {
-            throw new IllegalArgumentException("Code Invalid: ");
-        });
-        User user = userOptional.get();
+        User user =
+                userRepository.findByEmail(userRepository.checkUniqueVerificationCode(code))
+                        .orElseThrow(() -> new IllegalArgumentException("Invalid Activation Code"));
         if (!user.getIsEnabled()) {
             user.setIsEnabled(true);
             user.setVerificationCode(null);
             userRepository.save(user);
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.convertValue(user, JsonNode.class);
-            rabbitTemplate.setExchange("UserTopic");
-            rabbitTemplate.convertAndSend("user-save", node.toString());
         }
         return user;
     }

@@ -10,8 +10,23 @@ spring:
       resource:
         id: user-management-service
         tokenInfoUri: http://localhost:5000/auth-service/oauth/check_token
-
-
+  kafka:
+    consumer:
+      bootstrap-servers: kafka-cloud-3:39092
+      group-id: group_id
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      bootstrap-servers: kafka-cloud-3:39092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host:
 logging:
   level:
     org:
