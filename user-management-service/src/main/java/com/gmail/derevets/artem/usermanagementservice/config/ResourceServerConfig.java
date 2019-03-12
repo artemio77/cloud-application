@@ -1,63 +1,70 @@
 package com.gmail.derevets.artem.usermanagementservice.config;
 
 
-import com.gmail.derevets.artem.usermanagementservice.service.CustomUserInfoTokenServices;
-import feign.RequestInterceptor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.cloud.security.oauth2.client.feign.OAuth2FeignRequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfiguration;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 
-@EnableResourceServer
-@Configuration
+import java.util.Collections;
+import java.util.List;
+
 @Slf4j
+@Configuration
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
+    @Bean
+    protected ResourceServerConfiguration client1Resources() {
+        ResourceServerConfiguration resource = new ResourceServerConfiguration() {
+            public void setConfigurers(List<ResourceServerConfigurer> configurers) {
+                super.setConfigurers(configurers);
+            }
+        };
+        resource.setConfigurers(Collections.singletonList(new ResourceServerConfigurerAdapter() {
+            @Override
+            public void configure(ResourceServerSecurityConfigurer resources) {
+                resources.tokenServices(tokenServices()).resourceId("resource-server-rest-api");
+            }
 
-    private final ResourceServerProperties sso;
-
-    @Autowired
-    public ResourceServerConfig(ResourceServerProperties sso) {
-        this.sso = sso;
+            private RemoteTokenServices tokenServices() {
+                final RemoteTokenServices tokenService = new RemoteTokenServices();
+                tokenService.setCheckTokenEndpointUrl("http://localhost:5000/auth-service/oauth/check_token");
+                tokenService.setClientId("spring-security-oauth2-read-write-client");
+                tokenService.setClientSecret("artem");
+                return tokenService;
+            }
+        }));
+        resource.setOrder(5);
+        return resource;
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "spring.security.oauth2.client")
-    public ClientCredentialsResourceDetails clientCredentialsResourceDetails() {
-        return new ClientCredentialsResourceDetails();
+    protected ResourceServerConfiguration client2Resources() {
+        ResourceServerConfiguration resource = new ResourceServerConfiguration() {
+            public void setConfigurers(List<ResourceServerConfigurer> configurers) {
+                super.setConfigurers(configurers);
+            }
+        };
+        resource.setConfigurers(Collections.singletonList(new ResourceServerConfigurerAdapter() {
+            @Override
+            public void configure(ResourceServerSecurityConfigurer resources) {
+                resources.tokenServices(tokenServices()).resourceId("user-management-service");
+            }
+
+            private RemoteTokenServices tokenServices() {
+                final RemoteTokenServices tokenService = new RemoteTokenServices();
+                tokenService.setCheckTokenEndpointUrl("http://localhost:5000/auth-service/oauth/check_token");
+                tokenService.setClientId("user-management-service");
+                tokenService.setClientSecret("artem");
+
+                return tokenService;
+            }
+        }));
+        resource.setOrder(4);
+        return resource;
     }
 
-    @Bean
-    public RequestInterceptor oauth2FeignRequestInterceptor() {
-        return new OAuth2FeignRequestInterceptor(new DefaultOAuth2ClientContext(), clientCredentialsResourceDetails());
-    }
-
-    @Bean
-    public OAuth2RestTemplate clientCredentialsRestTemplate() {
-        log.error("ClientId {}", clientCredentialsResourceDetails().getClientId());
-        log.error("ClientSecret {}", clientCredentialsResourceDetails().getClientSecret());
-        log.error("Access Token URL {}", clientCredentialsResourceDetails().getAccessTokenUri());
-        return new OAuth2RestTemplate(clientCredentialsResourceDetails());
-    }
-
-    @Bean
-    public ResourceServerTokenServices tokenServices() {
-        return new CustomUserInfoTokenServices(sso.getUserInfoUri(), sso.getClientId());
-    }
-
-    @Override
-    public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/create","/activate/**").permitAll()
-                .anyRequest().authenticated();
-    }
 }

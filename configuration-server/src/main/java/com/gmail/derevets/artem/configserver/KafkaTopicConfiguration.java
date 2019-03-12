@@ -20,7 +20,8 @@ public class KafkaTopicConfiguration {
 
     @Bean
     public NewTopic topicRegisterUsers() {
-        return new NewTopic("users-register", 2, (short) 1);
+        return new NewTopic("user-update", 2, (short) 1);
     }
+
 
 }

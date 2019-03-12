@@ -2,13 +2,12 @@ package com.gmail.derevets.artem.usermanagementservice.controller;
 
 import com.gmail.derevets.artem.usermanagementservice.clients.UserClient;
 import com.gmail.derevets.artem.usermanagementservice.model.User;
+import com.gmail.derevets.artem.usermanagementservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -18,21 +17,23 @@ public class UserFeingController {
     private UserClient userClient;
 
     @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private UserService userService;
 
-    @PostMapping("/create")
-
-    public void createUser(@RequestBody User user) {
+    @PutMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public User createUser(@RequestBody User user) {
         log.info("POST user {}", user);
-        userClient.createUser(user);
+        return userClient.createUser(user);
     }
 
     @PostMapping("/activate/{code}")
-    public void activateUser(@PathVariable Long code) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public JSONObject activateUser(@PathVariable Long code) {
         log.info("POST activate user");
         User user = userClient.activateUser(code);
         log.info("Activated user {}", user);
-        kafkaTemplate.send("users-register", user.toString());
+        userService.saveUserInCassandra(user);
+        return new JSONObject().put("id", user.getId()).put("email", user.getEmail());
     }
 
 

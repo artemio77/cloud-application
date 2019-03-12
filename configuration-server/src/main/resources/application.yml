@@ -1,15 +1,4 @@
 spring:
-  kafka:
-    consumer:
-      bootstrap-servers: kafka-cloud-1:19092
-      group-id: group_id
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    producer:
-      bootstrap-servers: kafka-cloud-1:19092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
   cloud:
     config:
       server:

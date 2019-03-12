@@ -28,5 +28,10 @@ zuul:
       stripPrefix: false
       sensetiveHeaders:
 
+    chat-service:
+      path: /chat-service/**
+      url: http://localhost:5060
+      stripPrefix: false
+      sensetiveHeaders:
 server:
   port: 4000

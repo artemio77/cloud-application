@@ -4,7 +4,7 @@ import com.gmail.derevets.artem.authservice.model.User;
 
 public interface UserService {
 
-    void registerNewAccount(final User user);
+    User registerNewAccount(final User user);
 
     User findUserByEmail(final String email);
 
@@ -12,6 +12,6 @@ public interface UserService {
 
     User activateUser(Long verificationCode);
 
-    String checkUserVerificationCode (Long verificationCode);
+    String checkUserVerificationCode(Long verificationCode);
 
 }

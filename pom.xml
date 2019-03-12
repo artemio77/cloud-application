@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>LATEST</version>
+        <version>2.1.3.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -47,6 +47,7 @@
         <module>monitoring-service</module>
         <module>turbine-stream-service</module>
         <module>user-management-service</module>
+        <module>chat-service</module>
         <!--   <module>statistics-service</module>
            <module>notification-service</module>
            <module>turbine-stream-service</module>-->

@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,13 +38,16 @@ public class UserController {
         this.tokenStore = tokenStore;
     }
 
+
+    @RequestMapping(value = "/current", method = RequestMethod.GET)
+    public Principal getUser(Principal principal) {
+        return principal;
+    }
+
     @PutMapping("/register")
     public @ResponseBody
     User registerUser(@RequestBody User user) {
-        log.info(user.toString());
-        userService.registerNewAccount(user);
-        log.info("user {}", user);
-        return user;
+        return userService.registerNewAccount(user);
     }
 
     @PostMapping(path = "/activate/{code}")

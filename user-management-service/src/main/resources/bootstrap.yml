@@ -1,4 +1,6 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: user-service
   cloud:
@@ -7,5 +9,3 @@ spring:
       fail-fast: true
       password: user
       username: user
-  main:
-    allow-bean-definition-overriding: true

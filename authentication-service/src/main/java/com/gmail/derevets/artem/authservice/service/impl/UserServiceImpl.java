@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void registerNewAccount(final User user) {
+    public User registerNewAccount(final User user) {
         User newUser = User.builder()
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
                 .role(Role.ROLE_USER)
                 .build();
         newUser.setVerificationCode(generateUniqueVerificationCode());
-        userRepository.save(newUser);
+        return userRepository.save(newUser);
 
     }
 

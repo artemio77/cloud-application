@@ -13,7 +13,7 @@ public interface UserClient {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/auth-service/authManagement/register",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    void createUser(@RequestBody User user);
+    User createUser(@RequestBody User user);
 
 
     @RequestMapping(method = RequestMethod.POST, value = "/auth-service/authManagement/activate/{code}",
