@@ -26,38 +26,38 @@ after_success:
   - docker tag $CONFIG:$COMMIT $CONFIG:$TAG
   - docker push $CONFIG
 
-  # AUTHENTICATION-SERVICE
-  - export REGISTRY=receptoron/cloud-application-authentication-service
-  - docker build -t $REGISTRY:$COMMIT ./authentication-service
-  - docker tag $REGISTRY:$COMMIT $REGISTRY:$TAG
-  - docker push $REGISTRY
-
-  # GATEWAY
-  - export GATEWAY=receptoron/cloud-application-gateway-service
-  - docker build -t $GATEWAY:$COMMIT ./gateway-service
-  - docker tag $GATEWAY:$COMMIT $GATEWAY:$TAG
-  - docker push $GATEWAY
-
-  # CHAT SERVICE
-  - export AUTH_SERVICE=receptoron/cloud-application-chat-service
-  - docker build -t $AUTH_SERVICE:$COMMIT ./chat-service
-  - docker tag $AUTH_SERVICE:$COMMIT $AUTH_SERVICE:$TAG
-  - docker push $AUTH_SERVICE
-
-  # USER MANAGEMENT SERVICE
-  - export USER_MANAGEMENT_SERVICE=receptoron/cloud-application-user-management-service
-  - docker build -t $USER_MANAGEMENT_SERVICE:$COMMIT ./user-management-service
-  - docker tag $USER_MANAGEMENT_SERVICE:$COMMIT $ACCOUNT_SERVICE:$TAG
-  - docker push $USER_MANAGEMENT_SERVICE
-
-  # MONITORING
-  - export MONITORING=receptoron/cloud-application-monitoring-service
-  - docker build -t $MONITORING:$COMMIT ./monitoring-service
-  - docker tag $MONITORING:$COMMIT $MONITORING:$TAG
-  - docker push $MONITORING
-
-  # TURBINE STREAM SERVICE
-  - export TURBINE=receptoron/cloud-application-turbine-stream-service
-  - docker build -t $TURBINE:$COMMIT ./turbine-stream-service
-  - docker tag $TURBINE:$COMMIT $TURBINE:$TAG
-  - docker push $TURBINE
+#  # AUTHENTICATION-SERVICE
+#  - export REGISTRY=receptoron/cloud-application-authentication-service
+#  - docker build -t $REGISTRY:$COMMIT ./authentication-service
+#  - docker tag $REGISTRY:$COMMIT $REGISTRY:$TAG
+#  - docker push $REGISTRY
+#
+#  # GATEWAY
+#  - export GATEWAY=receptoron/cloud-application-gateway-service
+#  - docker build -t $GATEWAY:$COMMIT ./gateway-service
+#  - docker tag $GATEWAY:$COMMIT $GATEWAY:$TAG
+#  - docker push $GATEWAY
+#
+#  # CHAT SERVICE
+#  - export AUTH_SERVICE=receptoron/cloud-application-chat-service
+#  - docker build -t $AUTH_SERVICE:$COMMIT ./chat-service
+#  - docker tag $AUTH_SERVICE:$COMMIT $AUTH_SERVICE:$TAG
+#  - docker push $AUTH_SERVICE
+#
+#  # USER MANAGEMENT SERVICE
+#  - export USER_MANAGEMENT_SERVICE=receptoron/cloud-application-user-management-service
+#  - docker build -t $USER_MANAGEMENT_SERVICE:$COMMIT ./user-management-service
+#  - docker tag $USER_MANAGEMENT_SERVICE:$COMMIT $ACCOUNT_SERVICE:$TAG
+#  - docker push $USER_MANAGEMENT_SERVICE
+#
+#  # MONITORING
+#  - export MONITORING=receptoron/cloud-application-monitoring-service
+#  - docker build -t $MONITORING:$COMMIT ./monitoring-service
+#  - docker tag $MONITORING:$COMMIT $MONITORING:$TAG
+#  - docker push $MONITORING
+#
+#  # TURBINE STREAM SERVICE
+#  - export TURBINE=receptoron/cloud-application-turbine-stream-service
+#  - docker build -t $TURBINE:$COMMIT ./turbine-stream-service
+#  - docker tag $TURBINE:$COMMIT $TURBINE:$TAG
+#  - docker push $TURBINE
