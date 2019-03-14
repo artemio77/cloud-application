@@ -1,5 +1,6 @@
 package com.gmail.derevets.artem.chatservice.controller;
 
+import com.gmail.derevets.artem.chatservice.kafka.service.producer.MessageKafkaServiceProducer;
 import com.gmail.derevets.artem.chatservice.model.Message;
 import com.gmail.derevets.artem.chatservice.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,9 @@ public class MessageRESTController {
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private MessageKafkaServiceProducer messageKafkaServiceProducer;
+
     @GetMapping("/get")
     public @ResponseBody
     List<Message> getMessageListByChatId(@RequestParam("chatId") UUID chatId) {
@@ -33,9 +37,9 @@ public class MessageRESTController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("#oauth2.hasScope('server')")
     public JSONObject createContact(@RequestParam("message-type") String messageType,
-            @RequestBody Message message) throws JSONException {
+                                    @RequestBody Message message) throws JSONException {
         log.info("PUT MESSAGE {}", message);
-        messageService.saveMessage(message, messageType);
+        messageKafkaServiceProducer.sendMessage(message, messageType);
         return new JSONObject().put("response", "Created");
     }
 }

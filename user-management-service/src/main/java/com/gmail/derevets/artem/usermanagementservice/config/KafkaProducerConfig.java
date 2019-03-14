@@ -1,5 +1,6 @@
 package com.gmail.derevets.artem.usermanagementservice.config;
 
+import com.gmail.derevets.artem.usermanagementservice.model.Contact;
 import com.gmail.derevets.artem.usermanagementservice.model.User;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -34,8 +35,19 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, User> kafkaTemplate() {
+    public ProducerFactory<String, Contact> contactProducerFactory() {
+        return new DefaultKafkaProducerFactory<>(producerConfigs());
+    }
+
+    @Bean
+    public KafkaTemplate<String, User> kafkaUserTemplate() {
         return new KafkaTemplate<>(userProducerFactory());
     }
+
+    @Bean
+    public KafkaTemplate<String, Contact> kafkaContactTemplate() {
+        return new KafkaTemplate<>(contactProducerFactory());
+    }
+
 
 }

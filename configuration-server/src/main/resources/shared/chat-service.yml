@@ -5,7 +5,7 @@ spring:
       group-id: group_id
       auto-offset-reset: earliest
     producer:
-      bootstrap-servers: kafka-cloud-1:19092
+      bootstrap-servers: kafka-cloud-3:39092
   rabbitmq:
     host: 172.30.223.211
     port: 5672
@@ -20,7 +20,7 @@ spring:
 logging:
   level:
     org:
-      springframework: debug
+      springframework: info
 server:
   servlet:
     context-path: /chat-service
@@ -30,8 +30,6 @@ feign:
   hystrix:
     enabled: true
 security:
-  basic:
-    enabled: false
   oauth2:
     client:
       client-id: user-management-service

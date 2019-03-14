@@ -10,7 +10,9 @@ import java.util.UUID;
 
 public interface ChatService {
 
-    UUID createPrivateChat(Map<String, String> contactMap);
+    UUID createPrivateChatByMap(Map<String, String> contactMap);
+
+    UUID createPrivateChat(Chat chat);
 
     List<Chat> getByParticipantId(UUID id);
 

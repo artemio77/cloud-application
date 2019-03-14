@@ -1,5 +1,8 @@
 package com.gmail.derevets.artem.usermanagementservice.service.serviceImpl;
 
+import com.gmail.derevets.artem.usermanagementservice.exception.user.UserException;
+import com.gmail.derevets.artem.usermanagementservice.exception.user.UserNotFoundException;
+import com.gmail.derevets.artem.usermanagementservice.model.Role;
 import com.gmail.derevets.artem.usermanagementservice.model.User;
 import com.gmail.derevets.artem.usermanagementservice.repository.UserRepository;
 import com.gmail.derevets.artem.usermanagementservice.service.UserService;
@@ -7,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -18,13 +22,17 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User findUserById(UUID id) {
-        return null;
+    public User findUserById(UUID id) throws UserException {
+        log.info("UUID {}", id);
+        User user = userRepository.findByUserKey_Id(id);
+        log.info("GET USER {}", user);
+        Optional.ofNullable(user).orElseThrow(() -> new UserNotFoundException("User " + id + " Not Found"));
+        return user;
     }
 
     @Override
-    public UUID findUserByEmail(String email) {
-        return null;
+    public User findUserByEmail(String email) {
+        return userRepository.findByUserKey_Email(email);
     }
 
     @Override
@@ -33,10 +41,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UUID saveUserInCassandra(User user){
+    public UUID saveUserInCassandra(User user) {
         log.info("Save user {}", user);
+        user.setRole(Role.ROLE_USER);
         User createdUser = userRepository.insert(user);
-        log.info("User ID {}", createdUser.getId());
-        return createdUser.getId();
+        log.info("User ID {}", createdUser.getUserKey().getId());
+        return createdUser.getUserKey().getId();
     }
 }

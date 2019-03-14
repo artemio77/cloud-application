@@ -12,6 +12,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Data
@@ -19,7 +20,7 @@ import java.util.UUID;
 @Table("chat")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Chat extends BaseEntity<UUID> {
+public class Chat extends BaseEntity<UUID> implements Serializable {
 
     @PrimaryKey
     private ChatKey chatKey;

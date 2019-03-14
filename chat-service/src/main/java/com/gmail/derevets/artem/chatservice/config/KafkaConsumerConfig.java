@@ -2,9 +2,11 @@ package com.gmail.derevets.artem.chatservice.config;
 
 
 import com.gmail.derevets.artem.chatservice.model.Chat;
+import com.gmail.derevets.artem.chatservice.model.Message;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -39,18 +41,37 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, Chat> consumerFactory() {
+    @ConditionalOnMissingBean(name = "messageKafkaListenerContainerFactory")
+    public ConsumerFactory<String, Message> messageConsumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(
+                consumerConfigs(),
+                new StringDeserializer(),
+                new JsonDeserializer<>(Message.class));
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "chatKafkaListenerContainerFactory")
+    public ConsumerFactory<String, Chat> chatConsumerFactory() {
         return new DefaultKafkaConsumerFactory<>(
                 consumerConfigs(),
                 new StringDeserializer(),
                 new JsonDeserializer<>(Chat.class));
     }
 
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Chat> kafkaListenerContainerFactory() {
+
+    @Bean("chatKafkaListenerContainerFactory")
+    public ConcurrentKafkaListenerContainerFactory<String, Chat> chatKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, Chat> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory());
+        factory.setConsumerFactory(chatConsumerFactory());
+        return factory;
+    }
+
+    @Bean("messageKafkaListenerContainerFactory")
+    public ConcurrentKafkaListenerContainerFactory<String, Message> messageKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Message> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(messageConsumerFactory());
         return factory;
     }
 }

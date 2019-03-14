@@ -17,12 +17,12 @@ import java.time.LocalDateTime;
 @Data
 public abstract class BaseEntity<ID> {
 
-    @Column("creationTime")
+    @Column("creation_time")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime creationTime;
 
-    @Column("modificationTime")
+    @Column("modification_time")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime modificationTime;

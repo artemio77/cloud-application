@@ -19,9 +19,28 @@ public class KafkaTopicConfiguration {
     }
 
     @Bean
-    public NewTopic topicRegisterUsers() {
+    public NewTopic topicUserUpdate() {
         return new NewTopic("user-update", 2, (short) 1);
     }
 
+    @Bean
+    public NewTopic topicUserCreate() {
+        return new NewTopic("user-create", 2, (short) 1);
+    }
+
+    @Bean
+    public NewTopic topicContactCreate() {
+        return new NewTopic("contact-create", 2, (short) 2);
+    }
+
+    @Bean
+    public NewTopic topicChatCreate() {
+        return new NewTopic("chat-create", 2, (short) 2);
+    }
+
+    @Bean
+    public NewTopic topicMessageCreate() {
+        return new NewTopic("message-create", 2, (short) 2);
+    }
 
 }

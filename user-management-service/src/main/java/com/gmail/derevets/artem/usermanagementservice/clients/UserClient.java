@@ -1,6 +1,7 @@
 package com.gmail.derevets.artem.usermanagementservice.clients;
 
 import com.gmail.derevets.artem.usermanagementservice.model.User;
+import com.gmail.derevets.artem.usermanagementservice.model.UserExternal;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,12 +14,12 @@ public interface UserClient {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/auth-service/authManagement/register",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    User createUser(@RequestBody User user);
+    UserExternal createUser(@RequestBody UserExternal user);
 
 
     @RequestMapping(method = RequestMethod.POST, value = "/auth-service/authManagement/activate/{code}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    User activateUser(@PathVariable Long code);
+    UserExternal activateUser(@PathVariable Long code);
 
 
 }

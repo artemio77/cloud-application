@@ -1,12 +1,10 @@
 package com.gmail.derevets.artem.chatservice.controller;
 
 import com.gmail.derevets.artem.chatservice.model.Chat;
-import com.gmail.derevets.artem.chatservice.model.Message;
 import com.gmail.derevets.artem.chatservice.model.type.ChatType;
 import com.gmail.derevets.artem.chatservice.service.ChatService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,7 +42,7 @@ public class ChatRESTController {
     @PreAuthorize("#oauth2.hasScope('server')")
     public String createContact(@RequestParam Map<String, String> requestParams) throws JSONException {
         log.info("PUT CHAT {}", requestParams);
-        UUID id = chatService.createPrivateChat(requestParams);
+        UUID id = chatService.createPrivateChatByMap(requestParams);
         return id.toString();
     }
 }

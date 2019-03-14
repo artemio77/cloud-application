@@ -1,6 +1,6 @@
 package com.gmail.derevets.artem.usermanagementservice.exception;
 
-public class CloudApplicationException extends Throwable {
+public class CloudApplicationException extends RuntimeException {
     public CloudApplicationException() {
         super();
     }

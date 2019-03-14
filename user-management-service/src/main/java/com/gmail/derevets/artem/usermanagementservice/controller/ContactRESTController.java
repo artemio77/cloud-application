@@ -31,7 +31,7 @@ public class ContactRESTController {
     public JSONObject createContact(@RequestParam Map<String, String> requestParams) {
         requestParams.remove("access_token");
         log.info("REQUEST PARAMETERS {}", requestParams);
-        UUID contactId = contactService.createContact(requestParams);
+        UUID contactId = contactService.createContactByMap(requestParams);
         String chat = chatClient.createChat(requestParams);
         log.info("CHAT {}", chat);
         return new JSONObject().put("contactId", contactId);
@@ -46,15 +46,12 @@ public class ContactRESTController {
         return contact;
     }
 
-    @GetMapping("/get/state")
+    @GetMapping("/get/ut")
     public @ResponseBody
-    List<Contact> getContactByContactIdAndApprovedState(@RequestParam("contactId") String contactId,
-                                                        @RequestParam("approved") Boolean approved) {
-        List<Contact> contact =
-                contactService.getContactByContactIdAndApprovedStatus(
-                        UUID.fromString(contactId),
-                        approved);
+    List<Contact> getContactByUserTypeId(@RequestParam("contactId") String contactId) {
+        List<Contact> contact = contactService.getContactByUserType(UUID.fromString(contactId));
         log.info("GET CONTACT {}", contact);
         return contact;
     }
+
 }

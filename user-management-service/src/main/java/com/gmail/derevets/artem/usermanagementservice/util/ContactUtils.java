@@ -2,19 +2,26 @@ package com.gmail.derevets.artem.usermanagementservice.util;
 
 import com.gmail.derevets.artem.usermanagementservice.exception.contact.ContactRequestMapIllegalArgumentException;
 import com.gmail.derevets.artem.usermanagementservice.model.Contact;
+import com.gmail.derevets.artem.usermanagementservice.model.User;
+import com.gmail.derevets.artem.usermanagementservice.model.cassandra.ot.UserType;
 import com.gmail.derevets.artem.usermanagementservice.model.key.ContactKey;
 import lombok.extern.slf4j.Slf4j;
+import org.dozer.DozerBeanMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
+@Service
 public class ContactUtils {
 
-    public static void validateContactCreateMap(Map<String, String> contactMap) throws ContactRequestMapIllegalArgumentException {
+    public void validateContactCreateMap(Map<String, String> contactMap) throws ContactRequestMapIllegalArgumentException {
         try {
             if (contactMap.size() != 2) {
                 throw new ContactRequestMapIllegalArgumentException("Error contactMap size");
@@ -29,35 +36,14 @@ public class ContactUtils {
         }
     }
 
-
-    public static Map<ContactKey, Contact> createContactMap(UUID id, Map<String, String> contactMap) {
+    public Contact createNewContactEntity(UUID id, UUID contactId,
+                                          List<UserType> userType) {
         LocalDateTime localDateTime = LocalDateTime.now();
-        Map<ContactKey, Contact> userContactMap = contactMap.entrySet().stream()
-                .map(key -> {
-                    if (key.getKey().equalsIgnoreCase("initiator")) {
-                        return createNewContactEntity(id, UUID.fromString(key.getValue())
-                                , true, localDateTime);
-                    } else {
-                        return createNewContactEntity(id, UUID.fromString(key.getValue()),
-                                false, localDateTime);
-                    }
-                })
-                .collect(Collectors.toMap(
-                        contact -> contact.getContactKey(),
-                        contact -> contact));
-        log.info("userContactMap {}", userContactMap);
-        return userContactMap;
-    }
-
-    private static Contact createNewContactEntity(UUID id,
-                                                  UUID contactValue,
-                                                  Boolean approved,
-                                                  LocalDateTime localDateTime) {
         Contact contact = Contact.builder()
                 .contactKey(ContactKey.builder()
                         .id(id)
-                        .contactId(contactValue)
-                        .approved(approved)
+                        .contactId(contactId)
+                        .userTypeList(userType)
                         .build())
                 .build();
         contact.setModificationTime(localDateTime);
@@ -66,4 +52,15 @@ public class ContactUtils {
         log.info("Created contact {}", contact);
         return contact;
     }
+
+    public UserType transformUserToCassandraUserType(User user) {
+        log.info("CONTACT USER {}", user);
+        DozerBeanMapper mapper = new DozerBeanMapper();
+        UserType userType = mapper.map(user, UserType.class);
+        userType.setEmail(user.getUserKey().getEmail());
+        userType.setId(user.getUserKey().getId());
+        return userType;
+    }
+
+
 }

@@ -9,6 +9,6 @@ public interface MessageService {
 
     List<Message> findMessageByChatId(UUID chatId);
 
-    void saveMessage(Message message, String messageType);
+    UUID saveMessage(Message message);
 
 }
