@@ -38,6 +38,12 @@ after_success:
   - docker tag $GATEWAY:$COMMIT $GATEWAY:$TAG
   - docker push $GATEWAY
 
+  # EUREKA
+  - export EUREKA=receptoron/cloud-application-eureka-service
+  - docker build -t $EUREKA:$COMMIT ./eureka-service
+  - docker tag $EUREKA:$COMMIT $EUREKA:$TAG
+  - docker push $EUREKA
+
   # CHAT SERVICE
   - export AUTH_SERVICE=receptoron/cloud-application-chat-service
   - docker build -t $AUTH_SERVICE:$COMMIT ./chat-service
