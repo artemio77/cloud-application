@@ -1,15 +1,9 @@
 version: '2'
 services:
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - 15672:15672
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "10"
   configuration-service:
     environment:
+      KAFKA_CONSUMER_URL: $KAFKA_CONSUMER_URL
+      KAFKA_PRODUCER_URL: $KAFKA_PRODUCER_URL
       AUTH_SERVICE_URL: $AUTH_SERVICE_URL
       CONFIG_SERVICE_URL: $CONFIG_SERVICE_URL
       CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
@@ -39,6 +33,8 @@ services:
 
   authentication-service:
     environment:
+      KAFKA_CONSUMER_URL: $KAFKA_CONSUMER_URL
+      KAFKA_PRODUCER_URL: $KAFKA_PRODUCER_URL
       CONFIG_SERVICE_URL: $CONFIG_SERVICE_URL
       CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
     image: receptoron/cloud-application-authentication-service
@@ -50,6 +46,8 @@ services:
         max-file: "10"
   chat-service:
     environment:
+      KAFKA_CONSUMER_URL: $KAFKA_CONSUMER_URL
+      KAFKA_PRODUCER_URL: $KAFKA_PRODUCER_URL
       CONFIG_SERVICE_URL: $CONFIG_SERVICE_URL
       CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
       AUTH_SERVICE_URL: $AUTH_SERVICE_URL
@@ -62,6 +60,8 @@ services:
         max-file: "10"
   user-management-service:
     environment:
+      KAFKA_CONSUMER_URL: $KAFKA_CONSUMER_URL
+      KAFKA_PRODUCER_URL: $KAFKA_PRODUCER_URL
       CONFIG_SERVICE_URL: $CONFIG_SERVICE_URL
       CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
       AUTH_SERVICE_URL: $AUTH_SERVICE_URL
