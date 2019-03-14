@@ -25,10 +25,10 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public void saveMessage(Message message) {
+    public UUID saveMessage(Message message) {
         message.getMessageKey().setId(Generators.timeBasedGenerator().generate());
         message.setCreationTime(LocalDateTime.now());
         message.setModificationTime(LocalDateTime.now());
-        messageRepository.save(message);
+       return messageRepository.save(message).getMessageKey().getId();
     }
 }

@@ -1,0 +1,98 @@
+version: '2.1'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 15672:15672
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+  configuration-service:
+    environment:
+      AUTH_SERVICE_URL: $AUTH_SERVICE_URL
+      CONFIG_SERVICE_URL: $CONFIG_SERVICE_URL
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    image: receptoron/cloud-application-configuration-service
+    ports:
+      - 8888:8888
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+  gateway-service:
+    environment:
+      AUTH_SERVICE_URL: $AUTH_SERVICE_URL
+      USER_MANAGEMENT_SERVICE_URL: $USER_MANAGEMENT_SERVICE_URL
+      GATEWAY_SERVICE_URL: $GATEWAY_SERVICE_URL
+      CHAT_SERVICE_URL: $CHAT_SERVICE_URL
+      CONFIG_SERVICE_URL: $CONFIG_SERVICE_URL
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    image: receptoron/cloud-application-gateway-service
+    ports:
+      - 4000:4000
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+
+  authentication-service:
+    environment:
+      CONFIG_SERVICE_URL: $CONFIG_SERVICE_URL
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    image: receptoron/cloud-application-authentication-service
+    ports:
+      - 5000:5000
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+  chat-service:
+    environment:
+      CONFIG_SERVICE_URL: $CONFIG_SERVICE_URL
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+      AUTH_SERVICE_URL: $AUTH_SERVICE_URL
+    image: receptoron/cloud-application-chat-service
+    ports:
+      - 5060:5060
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+  user-management-service:
+    environment:
+      CONFIG_SERVICE_URL: $CONFIG_SERVICE_URL
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+      AUTH_SERVICE_URL: $AUTH_SERVICE_URL
+    image: receptoron/cloud-application-user-management-service
+    ports:
+      - 5050:5050
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+  monitoring-service:
+    environment:
+      AUTH_SERVICE_URL: $AUTH_SERVICE_URL
+      CONFIG_SERVICE_URL: $CONFIG_SERVICE_URL
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    image: receptoron/cloud-application-monitoring-service
+    ports:
+      - 2000:2000
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+  turbine-stream-service:
+    environment:
+      AUTH_SERVICE_URL: $AUTH_SERVICE_URL
+      CONFIG_SERVICE_URL: $CONFIG_SERVICE_URL
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    image: receptoron/cloud-application-turbine-stream-service
+    ports:
+      - 8019:8019
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"

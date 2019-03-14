@@ -34,8 +34,8 @@ security:
     client:
       client-id: user-management-service
       client-secret: artem
-      access-token-uri: http://localhost:5000/auth-service/oauth/token
-      user-authorization-uri: http://localhost:5000/auth-service/oauth/authorize
+      access-token-uri: ${AUTH_SERVICE_URL}/auth-service/oauth/token
+      user-authorization-uri: ${AUTH_SERVICE_URL}/auth-service/oauth/authorize
       scope: server
     resource:
-      token-info-uri: http://localhost:5000/auth-service/oauth/check_token
+      token-info-uri: ${AUTH_SERVICE_URL}/auth-service/oauth/check_token

@@ -18,19 +18,19 @@ zuul:
   routes:
     auth-service:
       path: /auth-service/**
-      url: http://localhost:5000
+      url: ${AUTH_SERVICE_URL}
       stripPrefix: false
       sensitiveHeaders:
 
     user-management-service:
       path: /user-management-service/**
-      url: http://localhost:5050
+      url: ${USER_MANAGEMENT_SERVICE_URL}
       stripPrefix: false
       sensetiveHeaders:
 
     chat-service:
       path: /chat-service/**
-      url: http://localhost:5060
+      url: ${CHAT_SERVICE_URL}
       stripPrefix: false
       sensetiveHeaders:
 server:

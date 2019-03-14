@@ -1,0 +1,63 @@
+sudo: required
+
+services:
+  - docker
+
+language: java
+jdk: oraclejdk8
+
+env:
+  global:
+    - secure: "ohRPvcL4Ky7cFwUDPaDuP2I5XgGnON9DjOHBIdu3VXJqrpni9+Mf4ygoNxM+Scluq5YKT4ymH+m+pganhB0zfgioAodWEZv1t3ikhDDpaW8EQAhWZD/WnCdHT6IzMnzt0m9lD3PiIT7ZeyNVjU3Z5Dk3QjXM45uET5ufvUraJdsvPfd5RmcHSeWK4ERu9ikNjkf0iDi90neaaXAzNV7PepL2zdDCnSZcnaSuEYIUqa31MLo3wcPpr6eKskHjXcnD9bNvJqgx9sbnJe3rL/4L0Jljb/ACpmFtsn2VzskmwKTaxJhPaia7pgWbm08svumuICCzhbNjpy/poBDI+HFLlztBFGeMTai3S8ipHhMV7lTeEMb8a/Qe1FiHa49p2NrvS0K5P697RsozJF/wusYYKhidcG2GAf2c/1oMdZ5AksxkgKUHY0x7FMpfjkMIwhuzB3mHuy32tnAlFIHDp+Ju0Hu9VRSWjOguuQF8PUwDgQfP1RzLJksQqQ0lyJ6fftKry8kV4v5Ldxq0ImOb/io4ys05CesnbISvxf5w+NFGlhDzPCFbAZimAvYUNfWm1BXgbOfoG+civdia5rHdus6Qf3DnsLTHA/AJ8Qq52x0N+aajQMCHKe15t/ymEtiuJY27hQi2ao8SrOjrOTC7KybPwIhBZ2CGP5W4cgFFNbAwuCA="
+    - secure: "RYxaNNQk7se1eFqQYXx3oxHrcmdNKO2SC+60FmxPaxHei6j9HgHxU3ruYCmLLPily9/JHJr7b5qj8Yjq17FGgLejyrYJgLGi5oWN2E7SMC+rLyEdO4+HEnrsKpBFKInM2l+ZgEecKgh9onLdslOMECWuNOPgakLrkMigc12MmNmOiSiivyMQUatBgAhwyBHY0YC48jXFLoJXORw73F0r5yhJfgbkU0+97LRMiKJ22AhSMW/TSaWV/4OcoElhWeaasLUDLSPQDe+nok5TzgdvZx0qkLw5M7BxUHqIvgCkQDFanjlfhjoZXvp18p7fQOgzdgkwYPU6KuZXBIaKm9bIMeDGocEE7FJdaK4ojfpoclO33OiB/ZcpMTDwjw896rE7HYInd0qekBAqQeqGEgNGNnCID+FoBO+IE+KQid53RflERrtzwZaHCBOJrq6ySaI403inIorOHDkAWXs9KhOQ4GD0/uWN1bsIOna2fThOb0HLIOObsKlOqACLl5rf2LJdY8iIWU5SDu6zcXJJy5/kxZRPckbBpex0XZRRIv+zgMoe42bM+uZtOd/CYpQdTz2EuEyhptp8SPeK/9sSwqzHfv2hrjyGIKItNJnXYUrCnTDbT+MbP21OSpOCJOjvtGYE4SvrGTDNKbWLa7RQO15iwUeGpWLBRjj8MSxDRBx1R+w=" # DOCKER_USER
+    - secure: "wwzxuwtQWEFYiF4Cd7sVD3s6/vslCEsKA6kzC0bD3kio05NTpHkf+qwqCoz8ImUrGISUd47mbAwiBF1rAzE1C2jFqds61cRsc75L+qj5Qi8EYINe2TXsngk8skEs8h09r+1z9rrJogTFRJHWdzIxY90hmQ4ZUo0zK/oLY7dHsWb2pmAqtcqcxX22lFyjyauyio8zR6OQmGWUwbP+shGw9YNCJDHeTweSIvk2fnrCSi9bCMTvzU+RxJ5TNDiEppxx2Z/hX+6QoQceTXR47GM+G07Kj1dNJwnTN7gO1tJI7z7pNVqFCtfx80B9yC+RyNY+v3ZjiiNBoFv3fkL8m87tOBwvPPCKn7/YFepK5BefxqbmjMLiqiwKb730vf0f8oumZGB0THORfcWqbo/yJBdZGm9zTbVPtFpasmVqnomqTsXyHCXS2rgZpKPq4sLbdBnEOfyOewmB3+idg7WlPUh5rifASetVssaEfM+bOa8Gj9YcAr7y1aABJ06Fq+upcEIoD4tezAiPtqtpzbv6UQIGyEUEPRBywOrOjaoRAy4aw0+utRP5t7M3a9/81Vte3okv755OTIt9yrdZMimVj2SxNT/fR1uQnhUpSHaHYCBE8ZiE4UXviPOnRnvW94GI4kxOw2sBjsmZwfw7+cZO0n/GARcMx9RXddbEEjp/rMO5l7Y=" # DOCKER_PASS
+    - COMMIT=${TRAVIS_COMMIT::7}
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+  #TAG
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+
+  # CONFIG SERVICE
+  - export CONFIG=receptoron/cloud-application-configuration-service
+  - docker build -t $CONFIG:$COMMIT ./configuration-service
+  - docker tag $CONFIG:$COMMIT $CONFIG:$TAG
+  - docker push $CONFIG
+
+  # AUTHENTICATION-SERVICE
+  - export REGISTRY=receptoron/cloud-application-authentication-service
+  - docker build -t $REGISTRY:$COMMIT ./authentication-service
+  - docker tag $REGISTRY:$COMMIT $REGISTRY:$TAG
+  - docker push $REGISTRY
+
+  # GATEWAY
+  - export GATEWAY=receptoron/cloud-application-gateway-service
+  - docker build -t $GATEWAY:$COMMIT ./gateway-service
+  - docker tag $GATEWAY:$COMMIT $GATEWAY:$TAG
+  - docker push $GATEWAY
+
+  # CHAT SERVICE
+  - export AUTH_SERVICE=receptoron/cloud-application-chat-service
+  - docker build -t $AUTH_SERVICE:$COMMIT ./chat-service
+  - docker tag $AUTH_SERVICE:$COMMIT $AUTH_SERVICE:$TAG
+  - docker push $AUTH_SERVICE
+
+  # USER MANAGEMENT SERVICE
+  - export USER_MANAGEMENT_SERVICE=receptoron/cloud-application-user-management-service
+  - docker build -t $USER_MANAGEMENT_SERVICE:$COMMIT ./user-management-service
+  - docker tag $USER_MANAGEMENT_SERVICE:$COMMIT $ACCOUNT_SERVICE:$TAG
+  - docker push $USER_MANAGEMENT_SERVICE
+
+  # MONITORING
+  - export MONITORING=receptoron/cloud-application-monitoring-service
+  - docker build -t $MONITORING:$COMMIT ./monitoring-service
+  - docker tag $MONITORING:$COMMIT $MONITORING:$TAG
+  - docker push $MONITORING
+
+  # TURBINE STREAM SERVICE
+  - export TURBINE=receptoron/cloud-application-turbine-stream-service
+  - docker build -t $TURBINE:$COMMIT ./turbine-stream-service
+  - docker tag $TURBINE:$COMMIT $TURBINE:$TAG
+  - docker push $TURBINE
