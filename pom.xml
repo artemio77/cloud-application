@@ -40,7 +40,7 @@
     </dependencyManagement>
 
     <modules>
-        <module>configuration-server</module>
+        <module>configuration-service</module>
         <module>gateway-service</module>
         <module>authentication-service</module>
         <module>eureka-service</module>
